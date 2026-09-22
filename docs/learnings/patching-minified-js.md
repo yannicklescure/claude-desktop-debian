@@ -91,9 +91,14 @@ Four things generalize:
   the injected `||`-chain and the guard it expresses silently lost.
   `|` is in — but as the status quo, not as a clean composition: with
   `e||` retained in front, the `=0` state reduces to `e||!1||!1` → `e`.
-  A prefix the anchor cannot see is a limit on the patch's *reach*,
-  which the splice guard neither creates nor fixes; note it rather than
-  letting a passing test imply the semantics were checked.
+  Read what the surviving operand *is* before sizing the consequence:
+  `e` turned out to be upstream's tray rebuild flag, `!1` on a normal
+  build and `!0` only on the retry after a caught tray-creation
+  exception, so the override is lost on that retry alone rather than
+  generally (#876). A prefix the anchor cannot see is a limit on the
+  patch's *reach*, which the splice guard neither creates nor fixes;
+  note it rather than letting a passing test imply the semantics were
+  checked.
 - **An idempotency guard keyed to a substring can be satisfied by the
   corruption.** `code.includes(applied)` matched the mispatched text,
   because `p.` + `applied` contains `applied`. The second pass logged

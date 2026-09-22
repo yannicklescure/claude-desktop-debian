@@ -261,10 +261,14 @@ _assert_chunk_untouched() {
 	# retained prefix comes through verbatim. Drop `|` and this reds.
 	#
 	# This pins the SPLICE, not the semantics. With `e||` retained,
-	# CLAUDE_TRAY_USE_DARK_ICON=0 reduces to `e||!1||!1` → `e`, so a
-	# truthy `e` still forces the dark glyph. That is a pre-existing
-	# limit of the anchor's reach (it starts at the callee and cannot
-	# see the `e||`), not something the splice guard introduces.
+	# CLAUDE_TRAY_USE_DARK_ICON=0 reduces to `e||!1||!1` → `e`. `e` is
+	# upstream's tray REBUILD flag, not a theme signal: the caller
+	# passes !1 on a normal build and !0 only when it retries after a
+	# caught tray-creation exception, so =0 is honored on every normal
+	# launch and lost on that retry alone. Pre-existing limit of the
+	# anchor's reach (it starts at the callee and cannot see the
+	# `e||`), not something the splice guard introduces. The truth
+	# table is asserted for real further down; tracked in #876.
 	_make_chunk \
 		'case"png":t=e||AL()==="gnome"||R.nativeTheme.shouldUseDarkColors?"TrayIconLinux-Dark.png":"TrayIconLinux.png";break'
 	patch_tray_icon_env_override
